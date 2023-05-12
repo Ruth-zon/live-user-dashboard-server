@@ -1,7 +1,6 @@
 import {
   BaseEntity,
   BeforeInsert,
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -18,6 +17,7 @@ export class User extends BaseEntity {
 
   @Column({ unique: true })
   @IsEmail()
+  @IsNotEmpty()
   username: string;
 
   @Column()
@@ -32,17 +32,14 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   lastLogin: Date;
 
-  @Column()
+  @Column({ nullable: true })
   userAgent: string;
 
   @Column()
-  registerTime: Date;
-
-  @Column()
-  loginsCount: number;
+  loginsCount?: number = 0;
 
   @BeforeInsert()
   async hashPassword() {

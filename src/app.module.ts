@@ -5,7 +5,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-const entities = [];
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ const entities = [];
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: entities,
+      entities: [__dirname + '/../**/*.entity.js'],
       synchronize: true,
     }),
     UsersModule,
