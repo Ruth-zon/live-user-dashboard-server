@@ -7,14 +7,12 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  // private userRepository: Repository<Role>;
-
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
     try {
       await user.save();
@@ -24,6 +22,11 @@ export class UsersService {
       }
     }
     delete user.password;
+    return user;
+  }
+
+  async findOne(username: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { username } });
     return user;
   }
 }

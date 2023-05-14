@@ -16,7 +16,7 @@ export class Auth extends BaseEntity {
 
   @ManyToOne(() => User, (User) => User.id)
   @JoinColumn({ name: 'user_id' })
-  user: string;
+  user: number;
 
   @Column()
   expiredTime: Date;
@@ -24,8 +24,8 @@ export class Auth extends BaseEntity {
   @BeforeInsert()
   async initAuth() {
     this.expiredTime = new Date();
-    this.expiredTime.setDate(
-      new Date().getTime() + parseInt(process.env.EXPIRED_TOKEN),
+    this.expiredTime.setSeconds(
+      new Date().getSeconds() + parseInt(process.env.EXPIRED_TOKEN),
     );
   }
 }
