@@ -5,7 +5,6 @@ import {
   BeforeInsert,
   Column,
   Entity,
-  Generated,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -31,7 +30,7 @@ export class Auth extends BaseEntity {
     this.token = crypto.randomBytes(16).toString('hex');
     this.expiredTime = new Date();
     this.expiredTime.setSeconds(
-      new Date().getSeconds() + parseInt(process.env.EXPIRED_TOKEN),
+      new Date().getSeconds() + parseInt(process.env.EXPIRED_TOKEN) * 1000,
     );
   }
 }

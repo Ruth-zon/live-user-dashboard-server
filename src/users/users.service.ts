@@ -1,5 +1,5 @@
+import { Auth } from './../auth/auth.entity';
 import { ConflictException, Injectable } from '@nestjs/common';
-
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Auth)
+    private readonly authRepository: Repository<Auth>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -27,7 +29,16 @@ export class UsersService {
 
   async findOne(username: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { username } });
-    delete user.password;
     return user;
+  }
+
+  async find(): Promise<Array<User>> {
+    const list = await await this.authRepository
+      .createQueryBuilder('auth')
+      .innerJoinAndSelect('auth.user', 'user', `auth.expiredTime > now()`)
+      .groupBy('user.id')
+      .select(['user.*'])
+      .execute();
+    return list;
   }
 }

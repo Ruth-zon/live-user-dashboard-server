@@ -14,6 +14,12 @@ export class UsersController {
   }
 
   @UseGuards(AuthGuard)
+  @Get()
+  async find(): Promise<Array<User>> {
+    return await this.usersService.find();
+  }
+
+  @UseGuards(AuthGuard)
   @Get('/:username')
   async findOne(@Param('username') username: string): Promise<User> {
     return await this.usersService.findOne(username);
