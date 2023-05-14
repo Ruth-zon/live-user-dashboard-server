@@ -1,9 +1,11 @@
 import { User } from 'src/users/user.entity';
+import * as crypto from 'crypto';
 import {
   BaseEntity,
   BeforeInsert,
   Column,
   Entity,
+  Generated,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -11,7 +13,10 @@ import {
 
 @Entity()
 export class Auth extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
+  id: string;
+
+  @Column()
   token: string;
 
   @ManyToOne(() => User, (User) => User.id)
@@ -23,6 +28,7 @@ export class Auth extends BaseEntity {
 
   @BeforeInsert()
   async initAuth() {
+    this.token = crypto.randomBytes(16).toString('hex');
     this.expiredTime = new Date();
     this.expiredTime.setSeconds(
       new Date().getSeconds() + parseInt(process.env.EXPIRED_TOKEN),
