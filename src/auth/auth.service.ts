@@ -14,8 +14,9 @@ export class AuthService {
 
   async signIn(username: string, password: string): Promise<any> {
     const user = await this.usersService.findOne(username);
+    if (!user) throw new UnauthorizedException('user not found');
     const auth = this.authRepository.create({ user: user.id });
-    if (!user.validatePassword(password)) {
+    if (!user.password || !user.validatePassword(password)) {
       throw new UnauthorizedException();
     }
     user.loginsCount++;
