@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
       const payload = await this.dataSource
         .getRepository(Auth)
         .findOne({ where: { token } });
-      if (payload.expiredTime < new Date()) {
+      if (!payload || payload.expiredTime < new Date()) {
         await this.dataSource.getRepository(Auth).delete({ token });
         throw new UnauthorizedException();
       }

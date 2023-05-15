@@ -14,8 +14,14 @@ export class UsersService {
     private readonly authRepository: Repository<Auth>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.userRepository.create(createUserDto);
+  async create(
+    createUserDto: CreateUserDto,
+    userAgent: string,
+    ip: string,
+  ): Promise<User> {
+    const userData = { ...createUserDto, ip, userAgent };
+    // userData.userAgent = req.headers['User-Agent'];
+    const user = this.userRepository.create(userData);
     try {
       await user.save();
     } catch (err) {
@@ -37,7 +43,9 @@ export class UsersService {
       .createQueryBuilder('auth')
       .innerJoinAndSelect('auth.user', 'user', `auth.expiredTime > now()`)
       .groupBy('user.id')
-      .select(['user.*'])
+      .select([
+        'user.username, user.lastLogin as "login time", user.updatedAt as "Last update time", user.ip as "user ip"',
+      ])
       .execute();
     return list;
   }

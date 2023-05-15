@@ -39,6 +39,9 @@ export class User extends BaseEntity {
   userAgent: string;
 
   @Column()
+  ip: string;
+
+  @Column()
   loginsCount?: number = 0;
 
   @BeforeInsert()
