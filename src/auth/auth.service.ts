@@ -25,4 +25,9 @@ export class AuthService {
     await auth.save();
     return { access_token: auth.token };
   }
+
+  async signOut(req): Promise<void> {
+    const token = req.token;
+    await this.authRepository.delete({ token });
+  }
 }

@@ -51,6 +51,10 @@ describe('AuthService', () => {
     await service.signIn('test', 'password');
   });
 
+  it('sign out successfull', async () => {
+    await service.signOut({ token: 'token' });
+  });
+
   // it('sign in with incorrect user should fail', async () => {
   //   await service.signIn('user', 'password');
   // });

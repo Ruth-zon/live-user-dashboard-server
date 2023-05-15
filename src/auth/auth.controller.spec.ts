@@ -42,4 +42,15 @@ describe('AuthController', () => {
         done(err, res);
       });
   });
+
+  it('POST /', (done) => {
+    request(API)
+      .post('/auth/logout')
+      .expect(200)
+      .end((err, res) => {
+        if (err !== null) done(err, res);
+        if (res.error) done(res.error, res);
+        done(err, res);
+      });
+  });
 });
